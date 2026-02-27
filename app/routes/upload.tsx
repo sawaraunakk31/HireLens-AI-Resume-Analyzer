@@ -77,6 +77,7 @@ const Upload = () => {
 
       await kv.set(`resume:${uuid}`, JSON.stringify(data));
       setStatusText("Analysis complete, redirecting...");
+      navigate(`/resume/${uuid}`);
     } catch (error) {
       console.error("Analysis process failed deep log:", error);
       if (error instanceof Error) {
