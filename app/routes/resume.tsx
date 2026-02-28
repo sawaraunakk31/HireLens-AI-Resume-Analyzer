@@ -94,7 +94,7 @@ const Resume = () => {
 
           <div className="flex items-center gap-3">
             <BrainCircuit className="w-5 h-5 text-primary" />
-            <span className="font-bold font-display tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400 text-lg hidden sm:block">
+            <span className="font-extrabold font-display tracking-tight text-transparent bg-clip-text bg-linear-to-r from-primary via-blue-400 to-cyan-400 text-xl hidden sm:block">
               HireLens Intelligence
             </span>
           </div>
@@ -122,10 +122,10 @@ const Resume = () => {
                 description
               </span>
               <div>
-                <h3 className="text-sm font-bold text-[var(--text-primary)] truncate max-w-[200px]">
+                <h3 className="text-sm font-extrabold text-white truncate max-w-[200px] tracking-tight">
                   {resumeData?.jobTitle || "Resume Document"}
                 </h3>
-                <p className="text-xs text-[var(--text-secondary)]">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-white/30">
                   Original Version
                 </p>
               </div>
@@ -173,16 +173,16 @@ const Resume = () => {
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
               Analysis Complete
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-[var(--text-primary)] mb-2 tracking-tight">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-extrabold text-white mb-4 tracking-tight leading-[1.1]">
               Intelligence{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-blue-400 to-cyan-400">
                 Report
               </span>
             </h2>
-            <p className="text-[var(--text-secondary)] max-w-xl">
+            <p className="font-body text-white/50 text-lg max-w-xl leading-relaxed">
               Here's the detailed breakdown of your resume's performance against
               the{" "}
-              <strong className="text-[var(--text-primary)]">
+              <strong className="text-white font-bold">
                 {resumeData?.companyName || "target company"}
               </strong>{" "}
               job description.

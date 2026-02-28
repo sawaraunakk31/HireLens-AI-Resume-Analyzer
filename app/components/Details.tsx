@@ -47,7 +47,7 @@ const CategoryHeader = ({
         <div className="w-8 h-8 rounded-lg bg-[var(--form-bg)] border border-[var(--glass-border)] flex items-center justify-center text-primary">
           <span className="material-symbols-outlined text-sm">psychology</span>
         </div>
-        <p className="text-lg font-bold text-[var(--text-primary)] font-display tracking-wide">
+        <p className="text-lg font-extrabold text-white font-display tracking-tight">
           {title}
         </p>
       </div>
@@ -83,15 +83,13 @@ const CategoryContent = ({
               <div className="flex flex-col gap-1">
                 <p
                   className={cn(
-                    "text-sm font-bold",
-                    tip.type === "good"
-                      ? "text-green-600 dark:text-green-400"
-                      : "text-yellow-600 dark:text-yellow-400",
+                    "text-sm font-extrabold",
+                    tip.type === "good" ? "text-green-400" : "text-yellow-400",
                   )}
                 >
                   {tip.tip}
                 </p>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                <p className="text-xs text-white/50 leading-relaxed font-medium">
                   {tip.explanation}
                 </p>
               </div>
@@ -106,7 +104,7 @@ const CategoryContent = ({
 const Details = ({ feedback }: { feedback: Feedback }) => {
   return (
     <div className="flex flex-col gap-4 w-full">
-      <h3 className="text-xl font-bold font-display flex items-center gap-2 mt-4 text-[var(--text-primary)]">
+      <h3 className="text-xl font-extrabold font-display flex items-center gap-2 mt-4 text-white tracking-tight">
         <span className="material-symbols-outlined text-primary">
           plagiarism
         </span>

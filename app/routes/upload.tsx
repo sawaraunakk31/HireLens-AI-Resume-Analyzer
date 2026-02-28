@@ -15,9 +15,7 @@ const Upload = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
-  const handleFileSelect = (file: File | null) => {
-    setFile(file);
-  };
+  const handleFileSelect = (f: File | null) => setFile(f);
 
   const handleAnalyze = async ({
     companyName,
@@ -39,19 +37,21 @@ const Upload = () => {
         setErrorMsg("Failed to upload file");
         return setIsProcessing(false);
       }
+
       setStatusText("Converting to image...");
       const imageFile = await convertPdfToImage(file);
       if (!imageFile.file) {
-        console.error("PDF conversion error:", imageFile.error);
         setErrorMsg("Failed to convert pdf to image");
         return setIsProcessing(false);
       }
+
       setStatusText("Uploading the image...");
       const uploadedImage = await fs.upload([imageFile.file]);
       if (!uploadedImage) {
         setErrorMsg("Failed to upload image");
         return setIsProcessing(false);
       }
+
       setStatusText("Preparing data...");
       const uuid = generateUUID();
       const data = {
@@ -64,6 +64,7 @@ const Upload = () => {
         feedback: "",
       };
       await kv.set(`resume:${uuid}`, JSON.stringify(data));
+
       setStatusText("Analyzing the resume...");
       const feedback = await ai.feedback(
         uploadedFile.path,
@@ -78,15 +79,13 @@ const Upload = () => {
         typeof feedback.message.content === "string"
           ? feedback.message.content
           : feedback.message.content[0].text;
-
       feedbackText = feedbackText.replace(/```json\n?|```/g, "").trim();
 
       try {
         data.feedback = JSON.parse(feedbackText);
-      } catch (parseError) {
-        console.error("Failed to parse AI feedback JSON:", feedbackText);
+      } catch {
         setErrorMsg(
-          `Error: AI returned invalid response format. It replied: ${feedbackText.substring(0, 100)}...`,
+          `Error: AI returned invalid response. It replied: ${feedbackText.substring(0, 100)}...`,
         );
         return setIsProcessing(false);
       }
@@ -95,14 +94,11 @@ const Upload = () => {
       setStatusText("Analysis complete, redirecting...");
       navigate(`/resume/${uuid}`);
     } catch (error) {
-      console.error("Analysis process failed deep log:", error);
-      if (error instanceof Error) {
-        console.error("Error message:", error.message);
-        console.error("Error stack:", error.stack);
-        setErrorMsg(`An unexpected error occurred: ${error.message}`);
-      } else {
-        setErrorMsg("An unexpected error occurred during analysis");
-      }
+      setErrorMsg(
+        error instanceof Error
+          ? `An error occurred: ${error.message}`
+          : "An unexpected error occurred",
+      );
       setIsProcessing(false);
     }
   };
@@ -110,189 +106,207 @@ const Upload = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget.closest("form");
-    if (!form) return;
+    if (!form || !file) return;
     const formData = new FormData(form);
-    const companyName = formData.get("company-name") as string;
-    const jobTitle = formData.get("job-title") as string;
-    const jobDescription = formData.get("job-description") as string;
-    if (!file) return;
-    handleAnalyze({ companyName, jobTitle, jobDescription, file }).catch(
-      (err) => {
-        console.error("handleAnalyze failed:", err);
-      },
-    );
+    handleAnalyze({
+      companyName: formData.get("company-name") as string,
+      jobTitle: formData.get("job-title") as string,
+      jobDescription: formData.get("job-description") as string,
+      file,
+    }).catch(console.error);
   };
 
   return (
     <div className="font-body min-h-screen flex flex-col overflow-x-hidden">
-      {/* Grid background */}
+      {/* Subtle grid */}
       <div
-        className="fixed inset-0 z-0 opacity-10 dark:opacity-[0.07] pointer-events-none"
+        className="fixed inset-0 z-0 pointer-events-none"
         style={{
-          backgroundSize: "40px 40px",
+          backgroundSize: "48px 48px",
           backgroundImage:
-            "linear-gradient(to right, #4d8bff 1px, transparent 1px), linear-gradient(to bottom, #4d8bff 1px, transparent 1px)",
+            "linear-gradient(to right, rgba(77,139,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(77,139,255,0.05) 1px, transparent 1px)",
         }}
       />
+      {/* Ambient glow */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/5 rounded-full blur-[120px] pointer-events-none z-0" />
 
-      <div className="relative z-10 flex flex-col h-full grow">
+      <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
 
-        <main className="flex-1 flex justify-center py-8 lg:py-12 px-4 sm:px-6">
-          <div className="flex flex-col w-full max-w-[1000px] gap-6">
-            {/* Page title */}
-            <div className="text-center">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold tracking-wide uppercase mb-3">
-                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+        <main className="flex-1 flex flex-col items-center justify-start py-10 px-4 sm:px-6">
+          <div className="w-full max-w-[960px] flex flex-col gap-8">
+            {/* ── Title ── */}
+            <div className="text-center pt-2">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[11px] font-semibold tracking-widest uppercase mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 AI Powered Analysis
-              </div>
-              <h1 className="text-3xl md:text-4xl font-bold font-display mb-2">
+              </span>
+              <h1 className="text-4xl md:text-5xl font-extrabold font-display tracking-tight leading-[1.1]">
                 <span className="text-white">Analyze Your </span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-cyan-400">
                   Resume
                 </span>
               </h1>
-              <p className="text-[var(--text-secondary)] text-sm">
-                Upload your resume for a general AI analysis — or add job
-                details for a targeted score.
+              <p className="font-body text-white/50 mt-4 text-sm max-w-md mx-auto leading-relaxed">
+                Upload for a general AI critique — or add job context for a
+                targeted ATS score.
               </p>
             </div>
 
-            {/* Error */}
+            {/* ── Error ── */}
             {errorMsg && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-center">
-                <p className="text-red-400 font-medium">{errorMsg}</p>
+              <div className="bg-red-500/8 border border-red-500/25 rounded-2xl px-5 py-4 flex items-center justify-between gap-4">
+                <p className="text-red-400 text-sm font-medium">{errorMsg}</p>
                 <button
                   onClick={() => setErrorMsg("")}
-                  className="mt-2 text-sm text-[var(--text-secondary)] hover:text-white underline"
+                  className="text-xs text-[var(--text-secondary)] hover:text-white underline shrink-0"
                 >
                   Dismiss
                 </button>
               </div>
             )}
 
-            {/* Processing */}
+            {/* ── Processing ── */}
             {isProcessing ? (
-              <div className="flex flex-col items-center justify-center gap-6 py-12">
-                <h2 className="text-2xl text-white font-semibold animate-pulse">
-                  {statusText}
-                </h2>
-                <div className="relative aspect-[4/3] w-full max-w-md rounded-3xl overflow-hidden glass-panel-heavy p-6 flex items-center justify-center">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-purple-500/10 opacity-50" />
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.8)] animate-[scan_2s_ease-in-out_infinite] z-20" />
-                  <img
-                    src="/images/resume-scan.gif"
-                    alt="Scanning"
-                    className="w-full h-full object-cover mix-blend-luminosity dark:mix-blend-screen opacity-80 z-10"
+              <div className="flex flex-col items-center gap-6 py-16">
+                <div className="relative w-16 h-16">
+                  <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-ping" />
+                  <div
+                    className="absolute inset-2 rounded-full border-2 border-primary animate-spin"
+                    style={{ borderTopColor: "transparent" }}
                   />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-primary text-xl">
+                      auto_awesome
+                    </span>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <p className="text-white font-semibold text-lg animate-pulse">
+                    {statusText}
+                  </p>
+                  <p className="text-[var(--text-secondary)] text-sm mt-1">
+                    This may take a moment...
+                  </p>
                 </div>
               </div>
             ) : (
-              /* Main form */
+              /* ── Main form ── */
               <form
                 id="upload-form"
                 onSubmit={handleSubmit}
-                className="glass-panel-heavy rounded-2xl p-8 relative overflow-hidden"
+                className="relative group"
               >
-                {/* Glows */}
-                <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
-                <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px] pointer-events-none" />
+                {/* Decorative border glow */}
+                <div className="absolute inset-0 bg-primary/20 rounded-4xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000 p-8" />
 
-                {/* 50 / 50 split */}
-                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* ── LEFT: Upload ── */}
-                  <div className="flex flex-col gap-4">
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-px bg-white/8 backdrop-blur-xl rounded-4xl overflow-hidden border border-white/12">
+                  {/* LEFT — Upload */}
+                  <div className="bg-[#0b1221]/95 p-10 flex flex-col gap-8">
                     <div>
-                      <h2 className="text-base font-bold text-white flex items-center gap-2 mb-1">
-                        <span className="material-symbols-outlined text-primary text-xl">
-                          upload_file
-                        </span>
+                      <h2 className="text-xl font-extrabold text-white font-display tracking-tight mb-2 uppercase text-sm">
                         Upload Resume
                       </h2>
-                      <p className="text-[var(--text-secondary)] text-sm">
-                        Drop your PDF resume here to get started.
+                      <p className="font-body text-white/50 text-xs leading-relaxed font-medium">
+                        Start your professional analysis by providing your
+                        current resume.
                       </p>
                     </div>
 
-                    <FileUploader file={file} onFileSelect={handleFileSelect} />
+                    <div className="flex-1">
+                      <FileUploader
+                        file={file}
+                        onFileSelect={handleFileSelect}
+                      />
+                    </div>
 
                     <button
                       type="submit"
                       disabled={!file}
-                      className="relative overflow-hidden group w-full bg-primary hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl shadow-[0_0_20px_rgba(77,139,255,0.4)] hover:shadow-[0_0_30px_rgba(77,139,255,0.6)] transition-all duration-300 flex items-center justify-center gap-2"
+                      className="group relative w-full overflow-hidden rounded-2xl py-4 font-extrabold text-sm text-white transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed border border-white/5 disabled:bg-white/5 tracking-widest uppercase"
                     >
-                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-                      <span className="material-symbols-outlined text-[20px]">
-                        auto_awesome
+                      {/* Interactive glow */}
+                      <span
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{
+                          background: !file
+                            ? "transparent"
+                            : "linear-gradient(135deg, #4d8bff, #3b82f6)",
+                        }}
+                      />
+
+                      <span className="relative flex items-center justify-center gap-2 tracking-wide text-white/90 group-disabled:text-white/30">
+                        <span className="material-symbols-outlined text-lg leading-none">
+                          auto_awesome
+                        </span>
+                        Analyze Document
                       </span>
-                      <span>Analyze Resume</span>
                     </button>
                   </div>
 
-                  {/* ── RIGHT: Job Context ── */}
-                  <div className="flex flex-col gap-4 lg:pl-8 lg:border-l lg:border-[var(--glass-border)]">
+                  {/* RIGHT — Job Context */}
+                  <div className="bg-[#0b1221]/80 p-10 flex flex-col gap-8 border-t lg:border-t-0 lg:border-l border-white/[0.08]">
                     <div>
-                      <h2 className="text-base font-bold text-white flex items-center gap-2 mb-1">
-                        <span className="material-symbols-outlined text-primary text-xl">
-                          work
-                        </span>
+                      <h2 className="text-sm font-extrabold text-white font-display uppercase tracking-[0.2em] mb-4 flex items-center justify-between">
                         Job Context
-                        <span className="text-[11px] font-normal text-[var(--text-secondary)] border border-[var(--glass-border)] px-2 py-0.5 rounded-full ml-1">
+                        <span className="text-[10px] uppercase tracking-widest font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
                           Optional
                         </span>
                       </h2>
-                      <p className="text-[var(--text-secondary)] text-sm">
-                        Add job details for a targeted ATS score and
-                        role-specific tips.
+                      <p className="font-body text-white/50 text-xs leading-relaxed font-medium">
+                        Add target details to receive ATS matching and tailored
+                        interview tips.
                       </p>
                     </div>
 
-                    <label className="flex flex-col gap-1.5">
-                      <span className="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-primary text-[18px]">
-                          business
-                        </span>
-                        Target Company
-                      </span>
-                      <input
-                        className="w-full h-11 px-4 rounded-xl bg-[#172236]/60 border border-[var(--glass-border)] text-white placeholder-[var(--text-secondary)]/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-200"
-                        placeholder="e.g. Google, Amazon, Startup Co."
-                        type="text"
-                        name="company-name"
-                        id="company-name"
-                      />
-                    </label>
+                    <div className="flex flex-col gap-6">
+                      <div className="flex flex-col gap-2.5 group/input">
+                        <label
+                          htmlFor="company-name"
+                          className="text-[10px] font-bold text-white/50 uppercase tracking-[0.2em] ml-1"
+                        >
+                          Company
+                        </label>
+                        <input
+                          id="company-name"
+                          name="company-name"
+                          type="text"
+                          placeholder="e.g. Google, Apple, Airbnb"
+                          className="w-full h-12 px-5 rounded-2xl bg-white/3 border border-white/8 text-white text-sm placeholder-white/20 focus:border-primary/50 focus:bg-white/5 focus:ring-4 focus:ring-primary/5 outline-none transition-all duration-300"
+                        />
+                      </div>
 
-                    <label className="flex flex-col gap-1.5">
-                      <span className="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-primary text-[18px]">
-                          badge
-                        </span>
-                        Target Role
-                      </span>
-                      <input
-                        className="w-full h-11 px-4 rounded-xl bg-[#172236]/60 border border-[var(--glass-border)] text-white placeholder-[var(--text-secondary)]/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-200"
-                        placeholder="e.g. Frontend Developer, Data Analyst"
-                        type="text"
-                        name="job-title"
-                        id="job-title"
-                      />
-                    </label>
+                      <div className="flex flex-col gap-2.5 group/input">
+                        <label
+                          htmlFor="job-title"
+                          className="text-[10px] font-bold text-white/50 uppercase tracking-[0.2em] ml-1"
+                        >
+                          Position
+                        </label>
+                        <input
+                          id="job-title"
+                          name="job-title"
+                          type="text"
+                          placeholder="e.g. Senior Software Engineer"
+                          className="w-full h-12 px-5 rounded-2xl bg-white/3 border border-white/8 text-white text-sm placeholder-white/20 focus:border-primary/50 focus:bg-white/5 focus:ring-4 focus:ring-primary/5 outline-none transition-all duration-300"
+                        />
+                      </div>
 
-                    <label className="flex flex-col gap-1.5 flex-1">
-                      <span className="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-primary text-[18px]">
-                          description
-                        </span>
-                        Job Description
-                      </span>
-                      <textarea
-                        className="w-full flex-1 min-h-[120px] p-4 rounded-xl bg-[#172236]/60 border border-[var(--glass-border)] text-white placeholder-[var(--text-secondary)]/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-200 resize-none"
-                        placeholder="Paste the job description here for a more accurate ATS score and keyword match..."
-                        name="job-description"
-                        id="job-description"
-                      />
-                    </label>
+                      <div className="flex flex-col gap-2.5 group/input">
+                        <label
+                          htmlFor="job-description"
+                          className="text-[10px] font-bold text-white/50 uppercase tracking-[0.2em] ml-1"
+                        >
+                          Job Description
+                        </label>
+                        <textarea
+                          id="job-description"
+                          name="job-description"
+                          placeholder="Paste the role requirements here..."
+                          className="w-full min-h-[160px] p-5 rounded-2xl bg-white/3 border border-white/8 text-white text-sm placeholder-white/20 focus:border-primary/50 focus:bg-white/5 focus:ring-4 focus:ring-primary/5 outline-none transition-all duration-300 resize-none leading-relaxed"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </form>

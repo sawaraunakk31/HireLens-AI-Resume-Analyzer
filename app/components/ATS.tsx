@@ -46,7 +46,7 @@ const ATS: React.FC<ATSProps> = ({ score, suggestions }) => {
 
   return (
     <div className="w-full mt-4">
-      <h3 className="text-xl font-bold font-display flex items-center gap-2 mb-4 text-[var(--text-primary)]">
+      <h3 className="text-xl font-extrabold font-display flex items-center gap-2 mb-4 text-white tracking-tight">
         <Server className="w-6 h-6 text-primary" />
         ATS Compatibility
       </h3>
@@ -67,10 +67,10 @@ const ATS: React.FC<ATSProps> = ({ score, suggestions }) => {
                 </span>
               </div>
               <div>
-                <h4 className="text-2xl font-bold text-[var(--text-primary)] font-display">
+                <h4 className="text-2xl font-black text-white font-display tracking-tight">
                   {score}/100
                 </h4>
-                <p className="text-sm text-[var(--text-secondary)] font-medium">
+                <p className="text-xs font-bold uppercase tracking-widest text-white/30">
                   {subtitle}
                 </p>
               </div>
@@ -105,7 +105,7 @@ const ATS: React.FC<ATSProps> = ({ score, suggestions }) => {
                   <AlertCircle className="w-5 h-5 mt-0.5 text-red-500 flex-shrink-0" />
                 )}
                 <p
-                  className={`text-sm leading-relaxed ${suggestion.type === "good" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
+                  className={`text-sm font-bold leading-relaxed ${suggestion.type === "good" ? "text-green-400" : "text-red-400"}`}
                 >
                   {suggestion.tip}
                 </p>

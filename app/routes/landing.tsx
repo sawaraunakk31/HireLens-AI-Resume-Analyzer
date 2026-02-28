@@ -117,81 +117,84 @@ export default function Landing() {
       <div className="fixed bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[128px] pointer-events-none z-0"></div>
 
       <div className="relative z-10 flex flex-col min-h-screen w-full">
-        {/* Header */}
-        <header className="sticky top-0 z-50 w-full glass-panel border-b border-[var(--glass-border)]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
+        {/* Floating Navbar */}
+        <div className="fixed top-6 left-0 right-0 z-50 px-4">
+          <header className="max-w-5xl mx-auto rounded-full border border-white/10 bg-[#0b1221]/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden">
+            <div className="px-6 py-3 flex items-center justify-between">
               {/* Logo */}
-              <div className="flex items-center gap-2">
+              <Link
+                to="/"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+              >
                 <img
                   src="/HireLens_Logo.png"
                   alt="HireLens Logo"
-                  className="h-8 sm:h-10 w-auto object-contain dark:contrast-125 dark:drop-shadow-[0_0_8px_rgba(77,139,255,0.5)]"
+                  className="h-7 w-auto object-contain dark:contrast-125 drop-shadow-[0_0_8px_rgba(77,139,255,0.3)]"
                 />
-              </div>
+              </Link>
 
-              {/* Navigation */}
-              <nav className="hidden md:flex items-center gap-8">
+              {/* Navigation Links */}
+              <nav className="hidden md:flex items-center gap-10">
                 <a
-                  className="text-[var(--text-secondary)] hover:text-primary transition-colors text-sm font-medium"
                   href="#features"
+                  className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-white/40 hover:text-primary transition-colors font-display"
                 >
                   Features
                 </a>
                 <a
-                  className="text-[var(--text-secondary)] hover:text-primary transition-colors text-sm font-medium"
                   href="#how-it-works"
+                  className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-white/40 hover:text-primary transition-colors font-display"
                 >
-                  How it Works
+                  Process
                 </a>
                 <Link
-                  className="text-[var(--text-secondary)] hover:text-primary transition-colors text-sm font-medium"
-                  to="/auth?next=/upload"
+                  className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-white/40 hover:text-primary transition-colors font-display"
+                  to="/upload"
                 >
-                  Tools
+                  Analyze
                 </Link>
               </nav>
 
-              {/* Auth Buttons */}
-              <div className="flex items-center gap-3">
+              {/* Auth Cluster */}
+              <div className="flex items-center gap-4">
                 {isLoggedIn ? (
-                  <>
+                  <div className="flex items-center gap-2">
                     <Link
                       to="/home"
-                      className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium px-3 py-2 transition-colors hidden sm:block"
+                      className="text-[10px] font-extrabold uppercase tracking-widest text-white/50 hover:text-white transition-colors px-3 cursor-pointer"
                     >
-                      Dashboard
+                      Home
                     </Link>
                     <button
                       onClick={() => {
                         auth.signOut();
                         navigate("/");
                       }}
-                      className="bg-red-500/10 hover:bg-red-500 border border-red-500/30 hover:border-red-500 text-red-400 hover:text-white text-sm font-bold py-2 px-5 rounded-lg transition-all"
+                      className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 text-red-500 text-[10px] font-black uppercase tracking-widest py-2 px-4 rounded-full transition-all"
                     >
-                      Sign Out
+                      Log Out
                     </button>
-                  </>
+                  </div>
                 ) : (
-                  <>
+                  <div className="flex items-center gap-4">
                     <Link
-                      className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium px-3 py-2 transition-colors hidden sm:block"
+                      className="text-white/40 hover:text-white text-[10px] font-extrabold uppercase tracking-widest transition-colors hidden sm:block"
                       to="/auth"
                     >
                       Log In
                     </Link>
                     <Link
-                      to="/auth?next=/home"
-                      className="bg-primary hover:bg-blue-600 text-white text-sm font-bold py-2 px-6 rounded-lg transition-all shadow-[0_0_15px_rgba(77,139,255,0.3)] hover:shadow-[0_0_25px_rgba(77,139,255,0.5)]"
+                      to="/auth?next=/upload"
+                      className="bg-primary hover:bg-blue-600 text-white text-[10px] font-black uppercase tracking-[0.15em] py-2.5 px-6 rounded-full transition-all shadow-lg shadow-primary/20"
                     >
-                      Dashboard
+                      Get Started
                     </Link>
-                  </>
+                  </div>
                 )}
               </div>
             </div>
-          </div>
-        </header>
+          </header>
+        </div>
 
         <main className="flex-grow">
           {/* Hero Section */}
@@ -209,18 +212,18 @@ export default function Landing() {
 
                   <h1
                     ref={titleRef}
-                    className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight tracking-tight"
+                    className="font-display text-5xl sm:text-7xl lg:text-8xl font-extrabold leading-[1.05] tracking-tight text-white"
                   >
                     Analyze. Optimize.
                     <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400 drop-shadow-[0_0_10px_rgba(77,139,255,0.5)]">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-cyan-400 drop-shadow-[0_0_20px_rgba(77,139,255,0.3)]">
                       Get Hired.
                     </span>
                   </h1>
 
                   <p
                     ref={subtitleRef}
-                    className="text-lg sm:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed"
+                    className="font-body text-lg sm:text-xl text-white/50 max-w-2xl mx-auto lg:mx-0 font-medium leading-relaxed"
                   >
                     Unlock your career potential with our futuristic AI resume
                     analyzer. Get instant feedback, beat the ATS bots, and land
@@ -347,10 +350,10 @@ export default function Landing() {
           <section id="features" className="py-24 relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+                <h2 className="font-display text-4xl md:text-5xl font-extrabold mb-6 tracking-tight text-white">
                   Why Choose HireLens?
                 </h2>
-                <p className="text-[var(--text-secondary)] text-lg">
+                <p className="font-body text-white/50 text-lg leading-relaxed">
                   Leverage the power of futuristic AI to craft a resume that
                   stands out in the digital pile.
                 </p>
@@ -367,10 +370,10 @@ export default function Landing() {
                       psychology
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold mb-3 font-display">
+                  <h3 className="text-xl font-extrabold mb-3 font-display tracking-tight text-white">
                     Deep AI Analysis
                   </h3>
-                  <p className="text-[var(--text-secondary)] leading-relaxed text-sm">
+                  <p className="font-body text-white/50 leading-relaxed text-sm">
                     Our neural networks dissect your resume structure and
                     content, offering deep-dive suggestions that go beyond
                     simple grammar checks.
@@ -384,10 +387,10 @@ export default function Landing() {
                       fact_check
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold mb-3 font-display">
+                  <h3 className="text-xl font-extrabold mb-3 font-display tracking-tight text-white">
                     ATS Optimization
                   </h3>
-                  <p className="text-[var(--text-secondary)] leading-relaxed text-sm">
+                  <p className="font-body text-white/50 leading-relaxed text-sm">
                     Ensure your resume passes Applicant Tracking Systems. We
                     simulate top ATS algorithms to guarantee your application
                     gets seen by humans.
@@ -401,10 +404,10 @@ export default function Landing() {
                       insights
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold mb-3 font-display">
+                  <h3 className="text-xl font-extrabold mb-3 font-display tracking-tight text-white">
                     Career Insights
                   </h3>
-                  <p className="text-[var(--text-secondary)] leading-relaxed text-sm">
+                  <p className="font-body text-white/50 leading-relaxed text-sm">
                     Get data-driven insights tailored to your industry. Compare
                     your skills against market demands and bridge the gap to
                     your dream job.
@@ -419,10 +422,10 @@ export default function Landing() {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary/10 pointer-events-none"></div>
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
               <div className="glass-panel-heavy rounded-3xl p-10 md:p-16 text-center shadow-[0_0_50px_rgba(77,139,255,0.15)] glow-border-hover">
-                <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">
+                <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-6 tracking-tight text-white leading-tight">
                   Ready to land your dream job?
                 </h2>
-                <p className="text-[var(--text-secondary)] text-lg mb-10 max-w-2xl mx-auto">
+                <p className="font-body text-white/50 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
                   Join thousands of job seekers who have optimized their resumes
                   with HireLens and secured interviews at top tech companies.
                 </p>
@@ -439,24 +442,46 @@ export default function Landing() {
           </section>
         </main>
 
-        {/* Footer */}
-        <footer className="border-t border-[var(--glass-border)] bg-[var(--bg-secondary)]/80 backdrop-blur-md py-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-              <div className="flex items-center gap-3">
+        {/* Redesigned Minimal Footer */}
+        <footer className="border-t border-white/5 bg-[#0b1221] py-8 overflow-hidden">
+          <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-6">
+              <Link
+                to="/"
+                className="opacity-60 hover:opacity-100 transition-opacity"
+              >
                 <img
                   src="/HireLens_Logo.png"
-                  alt="HireLens Logo"
-                  className="h-8 w-auto object-contain dark:contrast-125"
+                  alt="Logo"
+                  className="h-6 w-auto contrast-125"
                 />
-                <p className="text-[var(--text-secondary)] text-sm">
-                  Empowering job seekers with AI-driven tools.
-                </p>
-              </div>
-              <p className="text-[var(--text-secondary)] text-sm">
-                © 2026 HireLens. All rights reserved.
+              </Link>
+              <div className="hidden sm:block h-3 w-px bg-white/10" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">
+                © 2026 · HireLens · Future Focused
               </p>
             </div>
+
+            <nav className="flex items-center gap-8">
+              <a
+                href="#features"
+                className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30 hover:text-primary transition-colors"
+              >
+                Features
+              </a>
+              <a
+                href="#how-it-works"
+                className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30 hover:text-primary transition-colors"
+              >
+                How it Works
+              </a>
+              <Link
+                to="/upload"
+                className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30 hover:text-primary transition-colors"
+              >
+                Analyze
+              </Link>
+            </nav>
           </div>
         </footer>
       </div>

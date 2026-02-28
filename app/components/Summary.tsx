@@ -38,13 +38,17 @@ const CategoryCard = ({
         >
           <span className="material-symbols-outlined text-lg">{icon}</span>
         </div>
-        <span className="font-semibold text-sm text-[var(--text-secondary)]">
+        <span className="font-bold text-[10px] uppercase tracking-widest text-white/40">
           {title}
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <span className={`text-xl font-bold ${textColor}`}>{score}</span>
-        <span className="text-xs text-[var(--text-secondary)]">/100</span>
+        <span
+          className={`text-2xl font-black font-display tracking-tight ${textColor}`}
+        >
+          {score}
+        </span>
+        <span className="text-[10px] font-bold text-white/20">/100</span>
       </div>
     </div>
   );
@@ -75,10 +79,10 @@ const Summary = ({ feedback }: { feedback: Feedback }) => {
             </span>
             AI Analysis Complete
           </div>
-          <h2 className="text-3xl font-display font-bold text-[var(--text-primary)]">
+          <h2 className="text-3xl font-display font-extrabold text-white tracking-tight">
             Overall Impact Score
           </h2>
-          <p className="text-sm text-[var(--text-secondary)] max-w-sm leading-relaxed mt-2">
+          <p className="font-body text-sm text-white/50 max-w-sm leading-relaxed mt-2">
             This score reflects your resume's ability to pass ATS filters and
             impress human recruiters.
           </p>
@@ -109,7 +113,7 @@ const Summary = ({ feedback }: { feedback: Feedback }) => {
           </svg>
           <div className="absolute flex flex-col items-center justify-center text-center">
             <span
-              className={`text-4xl font-black font-display tracking-tighter ${scoreColorClass.split(" ")[0]}`}
+              className={`text-5xl font-black font-display tracking-tighter ${scoreColorClass.split(" ")[0]}`}
             >
               {score}
             </span>
