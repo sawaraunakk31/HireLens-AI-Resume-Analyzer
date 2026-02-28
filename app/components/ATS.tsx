@@ -1,4 +1,5 @@
-import React from 'react'
+import React from "react";
+import { Server, CheckCircle2, AlertCircle } from "lucide-react";
 
 interface Suggestion {
   type: "good" | "improve";
@@ -11,67 +12,110 @@ interface ATSProps {
 }
 
 const ATS: React.FC<ATSProps> = ({ score, suggestions }) => {
-  // Determine background gradient based on score
-  const gradientClass = score > 69
-    ? 'from-green-100'
-    : score > 49
-      ? 'from-yellow-100'
-      : 'from-red-100';
+  const isExcellent = score >= 80;
+  const isGood = score >= 60 && score < 80;
 
-  // Determine icon based on score
-  const iconSrc = score > 69
-    ? '/icons/ats-good.svg'
-    : score > 49
-      ? '/icons/ats-warning.svg'
-      : '/icons/ats-bad.svg';
+  const textColor = isExcellent
+    ? "text-green-500"
+    : isGood
+      ? "text-yellow-500"
+      : "text-red-500";
+  const bgColor = isExcellent
+    ? "bg-green-500/10"
+    : isGood
+      ? "bg-yellow-500/10"
+      : "bg-red-500/10";
+  const borderColor = isExcellent
+    ? "border-green-500/20"
+    : isGood
+      ? "border-yellow-500/20"
+      : "border-red-500/20";
+  const progressColor = isExcellent
+    ? "bg-green-500"
+    : isGood
+      ? "bg-yellow-500"
+      : "bg-red-500";
 
-  // Determine subtitle based on score
-  const subtitle = score > 69
-    ? 'Great Job!'
-    : score > 49
-      ? 'Good Start'
-      : 'Needs Improvement';
+  const subtitle = isExcellent
+    ? "Highly Optimized"
+    : isGood
+      ? "Good Start"
+      : "Needs Attention";
+
+  const iconName = isExcellent ? "task_alt" : isGood ? "warning" : "error";
 
   return (
-    <div className={`bg-gradient-to-b ${gradientClass} to-white rounded-2xl shadow-md w-full p-6`}>
-      {/* Top section with icon and headline */}
-      <div className="flex items-center gap-4 mb-6">
-        <img src={iconSrc} alt="ATS Score Icon" className="w-12 h-12" />
-        <div>
-          <h2 className="text-2xl font-bold">ATS Score - {score}/100</h2>
-        </div>
-      </div>
+    <div className="w-full mt-4">
+      <h3 className="text-xl font-bold font-display flex items-center gap-2 mb-4 text-[var(--text-primary)]">
+        <Server className="w-6 h-6 text-primary" />
+        ATS Compatibility
+      </h3>
 
-      {/* Description section */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-2">{subtitle}</h3>
-        <p className="text-gray-600 mb-4">
-          This score represents how well your resume is likely to perform in Applicant Tracking Systems used by employers.
-        </p>
+      <div className="glass-panel rounded-2xl p-6 border border-[var(--glass-border)] relative overflow-hidden">
+        {/* Background circuit pattern */}
+        <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+PHBhdGggZD0iTTQwIDBMNDAgODBNMCA0MEw4MCA0MCIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMSIvPjwvc3ZnPg==')] pointer-events-none"></div>
 
-        {/* Suggestions list */}
-        <div className="space-y-3">
-          {suggestions.map((suggestion, index) => (
-            <div key={index} className="flex items-start gap-3">
-              <img
-                src={suggestion.type === "good" ? "/icons/check.svg" : "/icons/warning.svg"}
-                alt={suggestion.type === "good" ? "Check" : "Warning"}
-                className="w-5 h-5 mt-1"
-              />
-              <p className={suggestion.type === "good" ? "text-green-700" : "text-amber-700"}>
-                {suggestion.tip}
-              </p>
+        <div className="relative z-10">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-4">
+              <div
+                className={`w-14 h-14 rounded-xl ${bgColor} ${textColor} flex items-center justify-center border ${borderColor} shadow-inner`}
+              >
+                <span className="material-symbols-outlined text-3xl">
+                  {iconName}
+                </span>
+              </div>
+              <div>
+                <h4 className="text-2xl font-bold text-[var(--text-primary)] font-display">
+                  {score}/100
+                </h4>
+                <p className="text-sm text-[var(--text-secondary)] font-medium">
+                  {subtitle}
+                </p>
+              </div>
             </div>
-          ))}
+
+            <div className="w-full sm:w-1/2 flex flex-col gap-2">
+              <div className="flex justify-between text-xs font-semibold text-[var(--text-secondary)]">
+                <span>Parse Success Rate</span>
+                <span className={textColor}>{score}%</span>
+              </div>
+              <div className="h-2 w-full bg-[var(--form-bg)] rounded-full overflow-hidden shadow-inner border border-[var(--glass-border)]">
+                <div
+                  className={`h-full ${progressColor} transition-all duration-1000 ease-out`}
+                  style={{ width: `${score}%` }}
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <hr className="border-[var(--glass-border)] mb-6" />
+
+          {/* Suggestions list */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {suggestions.map((suggestion, index) => (
+              <div
+                key={index}
+                className={`flex items-start gap-3 p-3 rounded-lg border ${suggestion.type === "good" ? "bg-green-500/5 border-green-500/10" : "bg-red-500/5 border-red-500/10"}`}
+              >
+                {suggestion.type === "good" ? (
+                  <CheckCircle2 className="w-5 h-5 mt-0.5 text-green-500 flex-shrink-0" />
+                ) : (
+                  <AlertCircle className="w-5 h-5 mt-0.5 text-red-500 flex-shrink-0" />
+                )}
+                <p
+                  className={`text-sm leading-relaxed ${suggestion.type === "good" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
+                >
+                  {suggestion.tip}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-
-      {/* Closing encouragement */}
-      <p className="text-gray-700 italic">
-        Keep refining your resume to improve your chances of getting past ATS filters and into the hands of recruiters.
-      </p>
     </div>
-  )
-}
+  );
+};
 
-export default ATS
+export default ATS;

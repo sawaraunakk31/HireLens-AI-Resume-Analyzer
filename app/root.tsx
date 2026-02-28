@@ -11,8 +11,10 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { usePuterStore } from "./lib/puter";
 import { useEffect } from "react";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 export const links: Route.LinksFunction = () => [
+  { rel: "icon", href: "/HireLens_Logo.png", type: "image/png" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -26,11 +28,11 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { init }=usePuterStore();
-  useEffect(()=>{
+  const { init } = usePuterStore();
+  useEffect(() => {
     init();
-  },[init])
-  
+  }, [init]);
+
   return (
     <html lang="en">
       <head>
@@ -38,12 +40,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <script src="https://js.puter.com/v2/"></script>
       </head>
       <body>
-        <script src="https://js.puter.com/v2/"></script>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          forcedTheme="dark"
+        >
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+        </ThemeProvider>
       </body>
     </html>
   );
