@@ -453,26 +453,6 @@ export default function Landing() {
                   Empowering job seekers with AI-driven tools.
                 </p>
               </div>
-              <div className="flex items-center gap-6 text-sm text-[var(--text-secondary)]">
-                <a
-                  href="#features"
-                  className="hover:text-primary transition-colors"
-                >
-                  Features
-                </a>
-                <a
-                  href="#how-it-works"
-                  className="hover:text-primary transition-colors"
-                >
-                  How it Works
-                </a>
-                <Link
-                  to="/auth?next=/upload"
-                  className="hover:text-primary transition-colors"
-                >
-                  Tools
-                </Link>
-              </div>
               <p className="text-[var(--text-secondary)] text-sm">
                 © 2026 HireLens. All rights reserved.
               </p>

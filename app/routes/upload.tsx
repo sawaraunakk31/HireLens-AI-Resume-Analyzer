@@ -79,7 +79,6 @@ const Upload = () => {
           ? feedback.message.content
           : feedback.message.content[0].text;
 
-      // Clean up markdown code blocks if the AI included them
       feedbackText = feedbackText.replace(/```json\n?|```/g, "").trim();
 
       try {
@@ -126,7 +125,7 @@ const Upload = () => {
 
   return (
     <div className="font-body min-h-screen flex flex-col overflow-x-hidden">
-      {/* Subtle Grid Background */}
+      {/* Grid background */}
       <div
         className="fixed inset-0 z-0 opacity-10 dark:opacity-[0.07] pointer-events-none"
         style={{
@@ -134,55 +133,53 @@ const Upload = () => {
           backgroundImage:
             "linear-gradient(to right, #4d8bff 1px, transparent 1px), linear-gradient(to bottom, #4d8bff 1px, transparent 1px)",
         }}
-      ></div>
+      />
 
-      {/* Main Container */}
       <div className="relative z-10 flex flex-col h-full grow">
         <Navbar />
 
-        {/* Content Area */}
         <main className="flex-1 flex justify-center py-8 lg:py-12 px-4 sm:px-6">
-          <div className="flex flex-col max-w-[800px] w-full gap-8">
-            {/* Page Title Section */}
-            <div className="text-center space-y-2">
-              <div className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold tracking-wide uppercase mb-2">
-                <span className="w-2 h-2 rounded-full bg-primary mr-2 animate-pulse"></span>
+          <div className="flex flex-col w-full max-w-[1000px] gap-6">
+            {/* Page title */}
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold tracking-wide uppercase mb-3">
+                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                 AI Powered Analysis
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-[var(--text-primary)] font-display">
-                Analyze New{" "}
+              <h1 className="text-3xl md:text-4xl font-bold font-display mb-2">
+                <span className="text-white">Analyze Your </span>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
-                  Candidate
+                  Resume
                 </span>
               </h1>
-              <p className="text-[var(--text-secondary)] max-w-lg mx-auto">
-                Upload a resume and let our AI engine extract insights, skills,
-                and compatibility scores in seconds.
+              <p className="text-[var(--text-secondary)] text-sm">
+                Upload your resume for a general AI analysis — or add job
+                details for a targeted score.
               </p>
             </div>
 
+            {/* Error */}
             {errorMsg && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-center mt-4 mb-4">
-                <p className="text-red-500 dark:text-red-400 font-medium">
-                  {errorMsg}
-                </p>
+              <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-center">
+                <p className="text-red-400 font-medium">{errorMsg}</p>
                 <button
                   onClick={() => setErrorMsg("")}
-                  className="mt-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] underline"
+                  className="mt-2 text-sm text-[var(--text-secondary)] hover:text-white underline"
                 >
                   Dismiss
                 </button>
               </div>
             )}
 
+            {/* Processing */}
             {isProcessing ? (
-              <div className="mt-8 flex flex-col items-center justify-center gap-6">
-                <h2 className="text-2xl text-[var(--text-primary)] font-semibold animate-pulse">
+              <div className="flex flex-col items-center justify-center gap-6 py-12">
+                <h2 className="text-2xl text-white font-semibold animate-pulse">
                   {statusText}
                 </h2>
                 <div className="relative aspect-[4/3] w-full max-w-md rounded-3xl overflow-hidden glass-panel-heavy p-6 flex items-center justify-center">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-purple-500/10 opacity-50 z-0"></div>
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.8)] animate-[scan_2s_ease-in-out_infinite] z-20"></div>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-purple-500/10 opacity-50" />
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.8)] animate-[scan_2s_ease-in-out_infinite] z-20" />
                   <img
                     src="/images/resume-scan.gif"
                     alt="Scanning"
@@ -191,102 +188,115 @@ const Upload = () => {
                 </div>
               </div>
             ) : (
+              /* Main form */
               <form
                 id="upload-form"
                 onSubmit={handleSubmit}
-                className="glass-panel-heavy rounded-2xl p-6 md:p-8 space-y-8 relative overflow-hidden text-left"
+                className="glass-panel-heavy rounded-2xl p-8 relative overflow-hidden"
               >
-                {/* Decorative glow behind card */}
-                <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-[80px] pointer-events-none"></div>
-                <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px] pointer-events-none"></div>
+                {/* Glows */}
+                <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
+                <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px] pointer-events-none" />
 
-                {/* Job Details Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8 relative z-10 w-full">
-                  <label className="flex flex-col gap-2 group">
-                    <span className="text-[var(--text-secondary)] text-sm font-medium flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-[18px]">
-                        business
+                {/* 50 / 50 split */}
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* ── LEFT: Upload ── */}
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <h2 className="text-base font-bold text-white flex items-center gap-2 mb-1">
+                        <span className="material-symbols-outlined text-primary text-xl">
+                          upload_file
+                        </span>
+                        Upload Resume
+                      </h2>
+                      <p className="text-[var(--text-secondary)] text-sm">
+                        Drop your PDF resume here to get started.
+                      </p>
+                    </div>
+
+                    <FileUploader file={file} onFileSelect={handleFileSelect} />
+
+                    <button
+                      type="submit"
+                      disabled={!file}
+                      className="relative overflow-hidden group w-full bg-primary hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl shadow-[0_0_20px_rgba(77,139,255,0.4)] hover:shadow-[0_0_30px_rgba(77,139,255,0.6)] transition-all duration-300 flex items-center justify-center gap-2"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                      <span className="material-symbols-outlined text-[20px]">
+                        auto_awesome
                       </span>
-                      Target Company
-                    </span>
-                    <input
-                      className="w-full rounded-xl bg-[#172236]/50 dark:bg-[var(--form-bg)]/50 border border-[var(--glass-border)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary focus:ring-1 focus:ring-primary focus:bg-[var(--form-bg)] transition-all duration-300 h-14 px-4 shadow-inner"
-                      placeholder="e.g. CyberDyne Systems"
-                      type="text"
-                      name="company-name"
-                      id="company-name"
-                    />
-                  </label>
-                  <label className="flex flex-col gap-2 group">
-                    <span className="text-[var(--text-secondary)] text-sm font-medium flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-[18px]">
-                        badge
+                      <span>Analyze Resume</span>
+                    </button>
+                  </div>
+
+                  {/* ── RIGHT: Job Context ── */}
+                  <div className="flex flex-col gap-4 lg:pl-8 lg:border-l lg:border-[var(--glass-border)]">
+                    <div>
+                      <h2 className="text-base font-bold text-white flex items-center gap-2 mb-1">
+                        <span className="material-symbols-outlined text-primary text-xl">
+                          work
+                        </span>
+                        Job Context
+                        <span className="text-[11px] font-normal text-[var(--text-secondary)] border border-[var(--glass-border)] px-2 py-0.5 rounded-full ml-1">
+                          Optional
+                        </span>
+                      </h2>
+                      <p className="text-[var(--text-secondary)] text-sm">
+                        Add job details for a targeted ATS score and
+                        role-specific tips.
+                      </p>
+                    </div>
+
+                    <label className="flex flex-col gap-1.5">
+                      <span className="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-primary text-[18px]">
+                          business
+                        </span>
+                        Target Company
                       </span>
-                      Target Role
-                    </span>
-                    <input
-                      className="w-full rounded-xl bg-[#172236]/50 dark:bg-[var(--form-bg)]/50 border border-[var(--glass-border)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary focus:ring-1 focus:ring-primary focus:bg-[var(--form-bg)] transition-all duration-300 h-14 px-4 shadow-inner"
-                      placeholder="e.g. Senior Neural Engineer"
-                      type="text"
-                      name="job-title"
-                      id="job-title"
-                    />
-                  </label>
-                  <label className="flex flex-col gap-2 md:col-span-2 group">
-                    <span className="text-[var(--text-secondary)] text-sm font-medium flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-[18px]">
-                        description
+                      <input
+                        className="w-full h-11 px-4 rounded-xl bg-[#172236]/60 border border-[var(--glass-border)] text-white placeholder-[var(--text-secondary)]/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-200"
+                        placeholder="e.g. Google, Amazon, Startup Co."
+                        type="text"
+                        name="company-name"
+                        id="company-name"
+                      />
+                    </label>
+
+                    <label className="flex flex-col gap-1.5">
+                      <span className="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-primary text-[18px]">
+                          badge
+                        </span>
+                        Target Role
                       </span>
-                      Job Description
-                    </span>
-                    <div className="relative">
+                      <input
+                        className="w-full h-11 px-4 rounded-xl bg-[#172236]/60 border border-[var(--glass-border)] text-white placeholder-[var(--text-secondary)]/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-200"
+                        placeholder="e.g. Frontend Developer, Data Analyst"
+                        type="text"
+                        name="job-title"
+                        id="job-title"
+                      />
+                    </label>
+
+                    <label className="flex flex-col gap-1.5 flex-1">
+                      <span className="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-primary text-[18px]">
+                          description
+                        </span>
+                        Job Description
+                      </span>
                       <textarea
-                        className="w-full rounded-xl bg-[#172236]/50 dark:bg-[var(--form-bg)]/50 border border-[var(--glass-border)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:border-primary focus:ring-1 focus:ring-primary focus:bg-[var(--form-bg)] transition-all duration-300 min-h-[140px] p-4 resize-y shadow-inner"
-                        placeholder="Paste the full job description here to improve analysis accuracy..."
+                        className="w-full flex-1 min-h-[120px] p-4 rounded-xl bg-[#172236]/60 border border-[var(--glass-border)] text-white placeholder-[var(--text-secondary)]/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-200 resize-none"
+                        placeholder="Paste the job description here for a more accurate ATS score and keyword match..."
                         name="job-description"
                         id="job-description"
-                      ></textarea>
-                    </div>
-                  </label>
-                </div>
-
-                {/* Separator */}
-                <div className="relative h-px w-full bg-[var(--glass-border)] my-8">
-                  <div className="absolute left-1/2 -translate-x-1/2 -top-3.5 px-4 py-1 bg-[var(--glass-surface)] backdrop-blur-md border border-[var(--glass-border)] text-[var(--text-secondary)] text-xs font-bold tracking-widest rounded-full shadow-sm">
-                    AND
+                      />
+                    </label>
                   </div>
-                </div>
-
-                {/* Upload Zone */}
-                <FileUploader file={file} onFileSelect={handleFileSelect} />
-
-                {/* Action Button */}
-                <div className="flex justify-end pt-2 z-10 w-full relative">
-                  <button
-                    type="submit"
-                    disabled={!file}
-                    className="relative overflow-hidden group w-full md:w-auto bg-primary hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-[0_0_20px_rgba(77,139,255,0.4)] hover:shadow-[0_0_30px_rgba(77,139,255,0.6)] transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
-                    <span className="material-symbols-outlined">
-                      auto_awesome
-                    </span>
-                    <span>Analyze Resume</span>
-                  </button>
                 </div>
               </form>
             )}
-
-            {/* Footer Links */}
-            <div className="flex justify-center gap-6 text-[var(--text-secondary)] text-sm mb-12">
-              <span className="hover:text-primary transition-colors cursor-pointer">
-                Privacy Policy
-              </span>
-              <span className="w-1 h-1 rounded-full bg-[var(--text-secondary)] my-auto"></span>
-              <span className="hover:text-primary transition-colors cursor-pointer">
-                Help Center
-              </span>
-            </div>
           </div>
         </main>
       </div>
