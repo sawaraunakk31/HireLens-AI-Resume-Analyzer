@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import gsap from "gsap";
+import { usePuterStore } from "~/lib/puter";
 
 export function meta() {
   return [
@@ -16,6 +17,9 @@ export default function Landing() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { auth } = usePuterStore();
+  const isLoggedIn = auth.isAuthenticated;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -150,18 +154,40 @@ export default function Landing() {
 
               {/* Auth Buttons */}
               <div className="flex items-center gap-3">
-                <Link
-                  className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium px-3 py-2 transition-colors hidden sm:block"
-                  to="/auth"
-                >
-                  Log In
-                </Link>
-                <Link
-                  to="/auth?next=/home"
-                  className="bg-primary hover:bg-blue-600 text-white text-sm font-bold py-2 px-6 rounded-lg transition-all shadow-[0_0_15px_rgba(77,139,255,0.3)] hover:shadow-[0_0_25px_rgba(77,139,255,0.5)]"
-                >
-                  Dashboard
-                </Link>
+                {isLoggedIn ? (
+                  <>
+                    <Link
+                      to="/home"
+                      className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium px-3 py-2 transition-colors hidden sm:block"
+                    >
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => {
+                        auth.signOut();
+                        navigate("/");
+                      }}
+                      className="bg-red-500/10 hover:bg-red-500 border border-red-500/30 hover:border-red-500 text-red-400 hover:text-white text-sm font-bold py-2 px-5 rounded-lg transition-all"
+                    >
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium px-3 py-2 transition-colors hidden sm:block"
+                      to="/auth"
+                    >
+                      Log In
+                    </Link>
+                    <Link
+                      to="/auth?next=/home"
+                      className="bg-primary hover:bg-blue-600 text-white text-sm font-bold py-2 px-6 rounded-lg transition-all shadow-[0_0_15px_rgba(77,139,255,0.3)] hover:shadow-[0_0_25px_rgba(77,139,255,0.5)]"
+                    >
+                      Dashboard
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -169,7 +195,7 @@ export default function Landing() {
 
         <main className="flex-grow">
           {/* Hero Section */}
-          <section className="relative pt-20 pb-24 lg:pt-32 lg:pb-32 overflow-hidden">
+          <section className="relative pt-10 pb-16 lg:pt-16 lg:pb-24 overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 {/* Hero Content */}
@@ -414,69 +440,39 @@ export default function Landing() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-[var(--glass-border)] bg-[var(--bg-secondary)]/80 backdrop-blur-md pt-16 pb-8">
+        <footer className="border-t border-[var(--glass-border)] bg-[var(--bg-secondary)]/80 backdrop-blur-md py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-              <div className="col-span-1 md:col-span-1">
-                <div className="flex items-center gap-2 mb-4">
-                  <img
-                    src="/HireLens_Logo.png"
-                    alt="HireLens Logo"
-                    className="h-10 w-auto object-contain dark:contrast-125 pt-1"
-                  />
-                </div>
-                <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
-                  Empowering job seekers with AI-driven tools to build better
-                  careers.
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+              <div className="flex items-center gap-3">
+                <img
+                  src="/HireLens_Logo.png"
+                  alt="HireLens Logo"
+                  className="h-8 w-auto object-contain dark:contrast-125"
+                />
+                <p className="text-[var(--text-secondary)] text-sm">
+                  Empowering job seekers with AI-driven tools.
                 </p>
               </div>
-              <div>
-                <h4 className="font-bold mb-4 font-display">Product</h4>
-                <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
-                  <li>
-                    <span className="hover:text-primary transition-colors cursor-pointer">
-                      Features
-                    </span>
-                  </li>
-                  <li>
-                    <span className="hover:text-primary transition-colors cursor-pointer">
-                      Pricing
-                    </span>
-                  </li>
-                </ul>
+              <div className="flex items-center gap-6 text-sm text-[var(--text-secondary)]">
+                <a
+                  href="#features"
+                  className="hover:text-primary transition-colors"
+                >
+                  Features
+                </a>
+                <a
+                  href="#how-it-works"
+                  className="hover:text-primary transition-colors"
+                >
+                  How it Works
+                </a>
+                <Link
+                  to="/auth?next=/upload"
+                  className="hover:text-primary transition-colors"
+                >
+                  Tools
+                </Link>
               </div>
-              <div>
-                <h4 className="font-bold mb-4 font-display">Resources</h4>
-                <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
-                  <li>
-                    <span className="hover:text-primary transition-colors cursor-pointer">
-                      Blog
-                    </span>
-                  </li>
-                  <li>
-                    <span className="hover:text-primary transition-colors cursor-pointer">
-                      Career Guide
-                    </span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold mb-4 font-display">Legal</h4>
-                <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
-                  <li>
-                    <span className="hover:text-primary transition-colors cursor-pointer">
-                      Privacy
-                    </span>
-                  </li>
-                  <li>
-                    <span className="hover:text-primary transition-colors cursor-pointer">
-                      Terms
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="border-t border-[var(--glass-border)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-[var(--text-secondary)] text-sm">
                 © 2026 HireLens. All rights reserved.
               </p>

@@ -215,7 +215,6 @@ const Upload = () => {
                       type="text"
                       name="company-name"
                       id="company-name"
-                      required
                     />
                   </label>
                   <label className="flex flex-col gap-2 group">
@@ -231,7 +230,6 @@ const Upload = () => {
                       type="text"
                       name="job-title"
                       id="job-title"
-                      required
                     />
                   </label>
                   <label className="flex flex-col gap-2 md:col-span-2 group">
@@ -247,7 +245,6 @@ const Upload = () => {
                         placeholder="Paste the full job description here to improve analysis accuracy..."
                         name="job-description"
                         id="job-description"
-                        required
                       ></textarea>
                     </div>
                   </label>
